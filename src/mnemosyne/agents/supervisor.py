@@ -9,6 +9,9 @@ from langgraph.checkpoint.memory import MemorySaver
 from .base import BaseAgent, AgentMessage
 from .bus import bus
 
+from .temporal import TemporalAgent
+from .correlation import CorrelationAgent
+
 logger = logging.getLogger(__name__)
 
 # Define LangGraph State
@@ -17,6 +20,8 @@ class SupervisorState(TypedDict):
     ingested_artifacts: List[Dict[str, Any]]
     extracted_entities: List[Dict[str, Any]]
     temporal_events: List[Dict[str, Any]]
+    resolved_entities: List[Dict[str, Any]]
+    correlation_edges: List[Dict[str, Any]]
     errors: List[str]
 
 class SupervisorAgent(BaseAgent):
@@ -27,6 +32,9 @@ class SupervisorAgent(BaseAgent):
         super().__init__(name="Supervisor")
         # Global limit of 5 concurrent agents
         self._semaphore = asyncio.Semaphore(5)
+        
+        self._temporal_agent = TemporalAgent()
+        self._correlation_agent = CorrelationAgent()
         
         # In-memory checkpointer for now. We can use AsyncSqliteSaver for persistence later.
         self._checkpointer = MemorySaver()
@@ -64,15 +72,27 @@ class SupervisorAgent(BaseAgent):
 
     async def _node_temporal(self, state: SupervisorState):
         logger.info("[Supervisor] Routing to Temporal")
-        # Pending M5 implementation
+        
+        # Call TemporalAgent
+        result = await self._temporal_agent.run({"raw_events": [{"start": "yesterday", "id": "1", "description": "test"}]})
+        
         await bus.publish("progress", AgentMessage(id=str(uuid.uuid4()), sender="Supervisor", topic="progress", payload={"step": "temporal"}))
-        return {"temporal_events": []}
+        return {"temporal_events": result.get("events", [])}
 
     async def _node_correlation(self, state: SupervisorState):
         logger.info("[Supervisor] Routing to Correlation")
-        # Pending M5 implementation
+        
+        # Call CorrelationAgent
+        result = await self._correlation_agent.run({
+            "entities": state.get("extracted_entities", []),
+            "interactions": []
+        })
+        
         await bus.publish("progress", AgentMessage(id=str(uuid.uuid4()), sender="Supervisor", topic="progress", payload={"step": "correlation"}))
-        return {}
+        return {
+            "resolved_entities": result.get("resolved_entities", []),
+            "correlation_edges": result.get("edges", [])
+        }
 
     async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
         """
