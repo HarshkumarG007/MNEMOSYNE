@@ -10,27 +10,27 @@ FIXTURES_DIR = Path("tests/fixtures")
 
 
 @pytest.mark.asyncio
-async def test_pdf_extraction():
+async def test_pdf_extraction() -> None:
     extractor = PDFExtractor()
     text = await extractor.extract(str(FIXTURES_DIR / "sample.pdf"))
     assert "Hello MNEMOSYNE PDF" in text
 
 
 @pytest.mark.asyncio
-async def test_docx_extraction():
+async def test_docx_extraction() -> None:
     extractor = DocxExtractor()
     text = await extractor.extract(str(FIXTURES_DIR / "sample.docx"))
     assert "Hello MNEMOSYNE DOCX" in text
 
 
 @pytest.mark.asyncio
-async def test_txt_extraction():
+async def test_txt_extraction() -> None:
     extractor = TextExtractor()
     text = await extractor.extract(str(FIXTURES_DIR / "sample.txt"))
     assert "This is a plain text file." in text
 
 
-def test_registry_resolution():
+def test_registry_resolution() -> None:
     pdf_ext = ExtractorRegistry.get_extractor("application/pdf")
     assert isinstance(pdf_ext, PDFExtractor)
 
@@ -42,6 +42,6 @@ def test_registry_resolution():
     assert isinstance(txt_ext, TextExtractor)
 
 
-def test_registry_unsupported():
+def test_registry_unsupported() -> None:
     with pytest.raises(UnsupportedFormatError):
         ExtractorRegistry.get_extractor("application/x-made-up-format")

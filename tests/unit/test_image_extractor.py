@@ -9,7 +9,7 @@ FIXTURES_DIR = Path("tests/fixtures")
 
 
 @pytest.mark.asyncio
-async def test_image_extraction():
+async def test_image_extraction() -> None:
     extractor = ImageExtractor()
 
     # Try the real extraction
@@ -23,7 +23,7 @@ async def test_image_extraction():
         assert "Hello MNEMOSYNE Image" in text
 
 
-def test_registry_resolution():
+def test_registry_resolution() -> None:
     png_ext = ExtractorRegistry.get_extractor("image/png")
     assert isinstance(png_ext, ImageExtractor)
 
@@ -33,7 +33,7 @@ def test_registry_resolution():
 
 @pytest.mark.asyncio
 @patch("pytesseract.image_to_string")
-async def test_image_extraction_missing_binary(mock_image_to_string):
+async def test_image_extraction_missing_binary(mock_image_to_string) -> None:
     from pytesseract import TesseractNotFoundError
 
     # Force the mock to raise the specific error that occurs when tesseract is missing

@@ -28,6 +28,8 @@ pillow = "^12.3.0"
 llama-cpp-python = "^0.2.79"
 chromadb = "^0.5.0"
 huggingface-hub = "^0.23.0"
+langgraph = "^1.2.10"
+langchain-core = "^1.5.3"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -54,3 +56,4 @@ strict = true
 python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
+exclude = ["tests"]

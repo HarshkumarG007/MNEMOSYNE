@@ -5,7 +5,7 @@ from mnemosyne.memory.vector_store import VectorStore
 
 
 @pytest.fixture
-def store():
+def store() -> Any:
     # Because VectorStore persists to disk, in tests we might want to mock chroma or use EphemeralClient.
     # We will patch the client initialization to use EphemeralClient for testing.
     with patch("chromadb.PersistentClient") as mock_client:
@@ -17,7 +17,7 @@ def store():
 
 @pytest.mark.asyncio
 @patch("mnemosyne.memory.vector_store.embed")
-async def test_vector_store_isolation(mock_embed, store):
+async def test_vector_store_isolation(mock_embed, store) -> None:
     """Test that cases are isolated in ChromaDB."""
 
     # Mock embed to just return dummy vectors
@@ -44,7 +44,7 @@ async def test_vector_store_isolation(mock_embed, store):
 
 @pytest.mark.asyncio
 @patch("mnemosyne.memory.vector_store.embed")
-async def test_vector_store_metadata_filter(mock_embed, store):
+async def test_vector_store_metadata_filter(mock_embed, store) -> None:
     """Test metadata filtering."""
 
     mock_embed.side_effect = [[[0.1, 0.1], [0.2, 0.2]], [[0.1, 0.1], [0.2, 0.2]]]

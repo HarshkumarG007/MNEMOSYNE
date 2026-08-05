@@ -3,12 +3,12 @@ from mnemosyne.evidence.hashing import calculate_sha256
 from mnemosyne.evidence.merkle import MerkleTree
 
 
-def test_empty_tree():
+def test_empty_tree() -> None:
     tree = MerkleTree([])
     assert tree.root is None
 
 
-def test_single_leaf_tree():
+def test_single_leaf_tree() -> None:
     leaf = calculate_sha256(b"Leaf 1")
     tree = MerkleTree([leaf])
 
@@ -18,7 +18,7 @@ def test_single_leaf_tree():
     assert tree.root == expected_root
 
 
-def test_even_leaves_tree():
+def test_even_leaves_tree() -> None:
     leaf1 = calculate_sha256(b"Leaf 1")
     leaf2 = calculate_sha256(b"Leaf 2")
 
@@ -28,7 +28,7 @@ def test_even_leaves_tree():
     assert tree.root == expected_root
 
 
-def test_odd_leaves_tree():
+def test_odd_leaves_tree() -> None:
     leaf1 = calculate_sha256(b"Leaf 1")
     leaf2 = calculate_sha256(b"Leaf 2")
     leaf3 = calculate_sha256(b"Leaf 3")
@@ -45,7 +45,7 @@ def test_odd_leaves_tree():
     assert tree.root == expected_root
 
 
-def test_inclusion_proof_valid():
+def test_inclusion_proof_valid() -> None:
     leaves = [calculate_sha256(f"Leaf {i}".encode("utf-8")) for i in range(8)]
     tree = MerkleTree(leaves)
 
@@ -57,7 +57,7 @@ def test_inclusion_proof_valid():
     assert MerkleTree.verify_proof(leaf, index, proof, tree.root)
 
 
-def test_inclusion_proof_invalid_leaf():
+def test_inclusion_proof_invalid_leaf() -> None:
     leaves = [calculate_sha256(f"Leaf {i}".encode("utf-8")) for i in range(8)]
     tree = MerkleTree(leaves)
 
@@ -69,7 +69,7 @@ def test_inclusion_proof_invalid_leaf():
     assert not MerkleTree.verify_proof(tampered_leaf, index, proof, tree.root)
 
 
-def test_inclusion_proof_invalid_proof():
+def test_inclusion_proof_invalid_proof() -> None:
     leaves = [calculate_sha256(f"Leaf {i}".encode("utf-8")) for i in range(8)]
     tree = MerkleTree(leaves)
 
@@ -83,7 +83,7 @@ def test_inclusion_proof_invalid_proof():
     assert not MerkleTree.verify_proof(leaf, index, proof, tree.root)
 
 
-def test_inclusion_proof_invalid_index():
+def test_inclusion_proof_invalid_index() -> None:
     leaves = [calculate_sha256(f"Leaf {i}".encode("utf-8")) for i in range(8)]
     tree = MerkleTree(leaves)
 

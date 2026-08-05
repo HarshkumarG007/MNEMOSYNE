@@ -6,7 +6,7 @@ from mnemosyne.evidence.store import EvidenceStore
 
 
 @pytest.fixture
-async def evidence_store(tmp_path):
+def evidence_store(tmp_path) -> Any:
     # Use a temporary directory for the database
     db_path = str(tmp_path / "test_evidence.sqlite")
 
@@ -31,7 +31,7 @@ async def evidence_store(tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_store_and_retrieve(evidence_store: EvidenceStore):
+async def test_store_and_retrieve(evidence_store: EvidenceStore) -> None:
     test_data = b"Hello, MNEMOSYNE!"
 
     # Store the data
@@ -46,7 +46,7 @@ async def test_store_and_retrieve(evidence_store: EvidenceStore):
 
 
 @pytest.mark.asyncio
-async def test_deduplication(evidence_store: EvidenceStore):
+async def test_deduplication(evidence_store: EvidenceStore) -> None:
     test_data = b"Duplicate Data"
 
     # Store the data twice
@@ -66,13 +66,13 @@ async def test_deduplication(evidence_store: EvidenceStore):
 
 
 @pytest.mark.asyncio
-async def test_retrieve_nonexistent(evidence_store: EvidenceStore):
+async def test_retrieve_nonexistent(evidence_store: EvidenceStore) -> None:
     with pytest.raises(KeyError):
         await evidence_store.retrieve("nonexistent_hash")
 
 
 @pytest.mark.asyncio
-async def test_decryption_failure_with_wrong_key(tmp_path):
+async def test_decryption_failure_with_wrong_key(tmp_path) -> None:
     db_path = str(tmp_path / "test_wrong_key.sqlite")
 
     # First store with one key

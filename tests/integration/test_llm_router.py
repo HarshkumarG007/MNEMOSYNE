@@ -5,7 +5,7 @@ from mnemosyne.models.llm_router import LLMRouter
 
 
 @pytest.fixture
-def mock_llama():
+def mock_llama() -> Any:
     with patch("mnemosyne.models.llm_router.Llama") as MockLlama:
         # Setup mock behavior
         mock_instance = MagicMock()
@@ -16,7 +16,7 @@ def mock_llama():
 
 
 @pytest.fixture
-def router(mock_llama):
+def router(mock_llama) -> Any:
     # Mock os.path.exists so router doesn't fail on missing models
     with patch("os.path.exists", return_value=True):
         r = LLMRouter(idle_timeout=1)  # short timeout for testing
@@ -26,7 +26,7 @@ def router(mock_llama):
 
 
 @pytest.mark.asyncio
-async def test_router_generate(router, mock_llama):
+async def test_router_generate(router, mock_llama) -> None:
     """Test generating text routes to the correct model."""
     response = await router.generate("test prompt", "fast_ner")
 
@@ -36,7 +36,7 @@ async def test_router_generate(router, mock_llama):
 
 
 @pytest.mark.asyncio
-async def test_router_embed(router, mock_llama):
+async def test_router_embed(router, mock_llama) -> None:
     """Test generating embeddings routes to the embedding model."""
     response = await router.embed("test prompt")
 
@@ -46,7 +46,7 @@ async def test_router_embed(router, mock_llama):
 
 
 @pytest.mark.asyncio
-async def test_router_unload(router, mock_llama):
+async def test_router_unload(router, mock_llama) -> None:
     """Test that the router unloads models when switching or closing."""
     await router.generate("test prompt", "fast_ner")
     assert router._current_model_name == "Phi-3-mini-4k-instruct-q4.gguf"

@@ -3,7 +3,7 @@ from mnemosyne.graph.memgraph_client import MemgraphClient
 
 
 @pytest.fixture
-async def client():
+def client() -> Any:
     client = MemgraphClient()
     try:
         await client.connect()
@@ -16,7 +16,7 @@ async def client():
 
 
 @pytest.mark.asyncio
-async def test_crud_operations(client: MemgraphClient):
+async def test_crud_operations(client: MemgraphClient) -> None:
     # Create
     create_query = """
     CREATE (e:Entity {id: 'test-1', name: 'Test Entity', valid_from: 1000, valid_to: 2000})
@@ -50,7 +50,7 @@ async def test_crud_operations(client: MemgraphClient):
 
 
 @pytest.mark.asyncio
-async def test_temporal_index_usage(client: MemgraphClient):
+async def test_temporal_index_usage(client: MemgraphClient) -> None:
     # Insert some dummy data to ensure planner uses index
     for i in range(10):
         await client.execute_query(

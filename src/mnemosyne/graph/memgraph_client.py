@@ -71,4 +71,3 @@ class MemgraphClient:
             result = await session.run(query, parameters or {})
             records = await result.data()
             return records
-
