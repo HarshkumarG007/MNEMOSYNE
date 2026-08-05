@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  memgraph:
+    image: memgraph/memgraph:latest
+    container_name: mnemosyne-memgraph
+    ports:
+      - "7687:7687"
+    environment:
+      - MEMGRAPH_PORT=7687
+    restart: on-failure
