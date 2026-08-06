@@ -4,9 +4,7 @@ from typing import Any, Dict, List, Optional
 import chromadb
 from mnemosyne.models.embeddings import embed
 
-DATA_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "data"
-)
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "data")
 CHROMA_DIR = os.path.join(DATA_DIR, "chroma")
 
 
@@ -17,9 +15,7 @@ class VectorStore:
         os.makedirs(CHROMA_DIR, exist_ok=True)
         self.client = chromadb.PersistentClient(path=CHROMA_DIR)
 
-    async def add(
-        self, case_id: str, documents: List[str], metadatas: List[Dict[str, Any]], ids: List[str]
-    ) -> None:
+    async def add(self, case_id: str, documents: List[str], metadatas: List[Dict[str, Any]], ids: List[str]) -> None:
         """
         Add a list of documents to the vector store.
         Collections are isolated per case_id.
@@ -27,9 +23,7 @@ class VectorStore:
         if not documents:
             return
 
-        collection = self.client.get_or_create_collection(
-            name=f"case_{case_id}", metadata={"hnsw:space": "cosine"}
-        )
+        collection = self.client.get_or_create_collection(name=f"case_{case_id}", metadata={"hnsw:space": "cosine"})
 
         # Generate embeddings
         embeddings = await embed(documents)
@@ -55,9 +49,7 @@ class VectorStore:
 
         query_embedding = (await embed([query]))[0]
 
-        results = collection.query(
-            query_embeddings=[query_embedding], n_results=k, where=filter_metadata
-        )
+        results = collection.query(query_embeddings=[query_embedding], n_results=k, where=filter_metadata)
 
         # Format results
         formatted = []
@@ -67,8 +59,6 @@ class VectorStore:
             dists = results["distances"][0] if results.get("distances") else [0.0] * len(docs)
             id_list = results["ids"][0]
 
-            for doc, meta, dist, doc_id in zip(docs, metas, dists, id_list):
-                formatted.append(
-                    {"id": doc_id, "document": doc, "metadata": meta, "distance": dist}
-                )
+            for doc, meta, dist, doc_id in zip(docs, metas, dists, id_list, strict=False):
+                formatted.append({"id": doc_id, "document": doc, "metadata": meta, "distance": dist})
         return formatted

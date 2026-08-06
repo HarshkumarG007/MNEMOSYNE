@@ -3,7 +3,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from scripts.download_models import verify_checksum
+from scripts.download_models import verify_checksum  # noqa: E402
 
 
 def test_verify_checksum() -> None:

@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 from mnemosyne.graph.memgraph_client import MemgraphClient
 

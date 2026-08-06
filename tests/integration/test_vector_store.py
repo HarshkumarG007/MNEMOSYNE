@@ -1,3 +1,4 @@
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -23,13 +24,9 @@ async def test_vector_store_isolation(mock_embed, store) -> None:
     # Mock embed to just return dummy vectors
     mock_embed.return_value = [[0.1, 0.2, 0.3]]
 
-    await store.add(
-        case_id="case_A", documents=["secret doc A"], metadatas=[{"source": "A"}], ids=["doc_1"]
-    )
+    await store.add(case_id="case_A", documents=["secret doc A"], metadatas=[{"source": "A"}], ids=["doc_1"])
 
-    await store.add(
-        case_id="case_B", documents=["public doc B"], metadatas=[{"source": "B"}], ids=["doc_2"]
-    )
+    await store.add(case_id="case_B", documents=["public doc B"], metadatas=[{"source": "B"}], ids=["doc_2"])
 
     # Search in case A
     results_A = await store.search(case_id="case_A", query="secret", k=10)
@@ -57,8 +54,6 @@ async def test_vector_store_metadata_filter(mock_embed, store) -> None:
     )
 
     # Filter by type=email
-    results = await store.search(
-        case_id="case_C", query="doc", k=10, filter_metadata={"type": "email"}
-    )
+    results = await store.search(case_id="case_C", query="doc", k=10, filter_metadata={"type": "email"})
     assert len(results) == 1
     assert results[0]["id"] == "id_1"

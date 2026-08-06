@@ -1,15 +1,18 @@
 import abc
 import logging
 from typing import Any, Dict, Optional, TypeVar
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
+
 
 class AgentMessage(BaseModel):
     """
     Typed message envelope shared by every agent.
     Used for inter-agent communication and state passing.
     """
+
     id: str
     sender: str
     topic: str
@@ -17,15 +20,17 @@ class AgentMessage(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
     error: Optional[str] = None
 
+
 TInput = TypeVar("TInput")
 TOutput = TypeVar("TOutput")
+
 
 class BaseAgent(abc.ABC):
     """
     Abstract base for all agents.
     Provides standard execution and error handling flows.
     """
-    
+
     def __init__(self, name: str):
         self.name = name
 
@@ -50,7 +55,7 @@ class BaseAgent(abc.ABC):
 
     def validate_output(self, output: TOutput) -> TOutput:
         """
-        Validates the output. By default returns it as-is, 
+        Validates the output. By default returns it as-is,
         but can be overridden to raise ValidationErrors.
         """
         return output

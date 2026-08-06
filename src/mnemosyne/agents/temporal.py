@@ -1,12 +1,14 @@
 import logging
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 import dateparser
 from pydantic import BaseModel
 
 from .base import BaseAgent
 
 logger = logging.getLogger(__name__)
+
 
 class EventNode(BaseModel):
     id: str
@@ -17,10 +19,12 @@ class EventNode(BaseModel):
     is_effect: bool = False
     related_event_ids: List[str] = []
 
+
 class TemporalAgent(BaseAgent):
     """
     Timeline construction and temporal reasoning.
     """
+
     def __init__(self):
         super().__init__(name="TemporalAgent")
 
@@ -63,20 +67,20 @@ class TemporalAgent(BaseAgent):
         """
         raw_events = input_data.get("raw_events", [])
         events: List[EventNode] = []
-        
+
         for raw in raw_events:
             start_expr = raw.get("start")
             end_expr = raw.get("end")
-            
+
             start_time = self.parse_time(start_expr) if start_expr else None
             end_time = self.parse_time(end_expr) if end_expr else None
-            
+
             # Simple assumption: point in time has start == end
             if start_time and not end_time:
                 end_time = start_time
             if not start_time and end_time:
                 start_time = end_time
-                
+
             if start_time and end_time:
                 event = EventNode(
                     id=raw.get("id", "unknown"),
@@ -85,10 +89,10 @@ class TemporalAgent(BaseAgent):
                     end_time=end_time,
                     is_cause=raw.get("is_cause", False),
                     is_effect=raw.get("is_effect", False),
-                    related_event_ids=raw.get("related_event_ids", [])
+                    related_event_ids=raw.get("related_event_ids", []),
                 )
                 events.append(event)
-        
+
         # Validate consistencies if causality is marked
         inconsistencies = []
         for e1 in events:
@@ -97,8 +101,5 @@ class TemporalAgent(BaseAgent):
                     if e2.is_effect and e1.id in e2.related_event_ids:
                         if not self.validate_consistency(cause=e1, effect=e2):
                             inconsistencies.append({"cause": e1.id, "effect": e2.id})
-                            
-        return {
-            "events": [e.model_dump() for e in events],
-            "inconsistencies": inconsistencies
-        }
+
+        return {"events": [e.model_dump() for e in events], "inconsistencies": inconsistencies}

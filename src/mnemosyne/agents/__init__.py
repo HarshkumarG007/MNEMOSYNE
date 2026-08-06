@@ -1,12 +1,12 @@
-from .base import BaseAgent, AgentMessage
+from .base import AgentMessage, BaseAgent
 from .bus import bus
-from .supervisor import SupervisorAgent
-from .ingestion import IngestionAgent
-from .extraction import ExtractionAgent
-from .temporal import TemporalAgent
 from .correlation import CorrelationAgent
-from .osint import OsintAgent
+from .extraction import ExtractionAgent
+from .ingestion import IngestionAgent
 from .judge import JudgeAgent
+from .osint import OsintAgent
+from .supervisor import SupervisorAgent
+from .temporal import TemporalAgent
 
 __all__ = [
     "BaseAgent",
@@ -18,5 +18,5 @@ __all__ = [
     "TemporalAgent",
     "CorrelationAgent",
     "OsintAgent",
-    "JudgeAgent"
+    "JudgeAgent",
 ]

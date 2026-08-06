@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 import pytest
 from cryptography.exceptions import InvalidTag

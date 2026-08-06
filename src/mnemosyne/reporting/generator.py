@@ -1,7 +1,8 @@
 import json
 import logging
-from typing import Dict, Any, List
-from jinja2 import Environment, BaseLoader
+from typing import Any, Dict
+
+from jinja2 import BaseLoader, Environment
 
 logger = logging.getLogger(__name__)
 
@@ -28,10 +29,12 @@ REPORT_TEMPLATE = """# MNEMOSYNE Forensic Report
 {% endfor %}
 """
 
+
 class ReportGenerator:
     """
     Generates JSON and Markdown forensic reports with strict citation linking.
     """
+
     def __init__(self):
         self.env = Environment(loader=BaseLoader())
         self.template = self.env.from_string(REPORT_TEMPLATE)
@@ -41,7 +44,7 @@ class ReportGenerator:
         Enforces that every claim (e.g., event) has a valid citation pointing to an artifact.
         """
         valid_citation_ids = {c["id"] for c in data.get("citations", [])}
-        
+
         for event in data.get("timeline", []):
             if "citation_id" not in event:
                 raise ValueError(f"Missing citation_id for event: {event['description']}")
