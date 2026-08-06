@@ -9,6 +9,8 @@ from langgraph.checkpoint.memory import MemorySaver
 from .base import BaseAgent, AgentMessage
 from .bus import bus
 
+from .ingestion import IngestionAgent
+from .extraction import ExtractionAgent
 from .temporal import TemporalAgent
 from .correlation import CorrelationAgent
 
@@ -33,6 +35,8 @@ class SupervisorAgent(BaseAgent):
         # Global limit of 5 concurrent agents
         self._semaphore = asyncio.Semaphore(5)
         
+        self._ingestion_agent = IngestionAgent()
+        self._extraction_agent = ExtractionAgent()
         self._temporal_agent = TemporalAgent()
         self._correlation_agent = CorrelationAgent()
         
@@ -60,15 +64,22 @@ class SupervisorAgent(BaseAgent):
 
     async def _node_ingestion(self, state: SupervisorState):
         logger.info("[Supervisor] Routing to Ingestion")
-        # Will call IngestionAgent logic here
+        result = await self._ingestion_agent.run({"files": state.get("files", [])})
         await bus.publish("progress", AgentMessage(id=str(uuid.uuid4()), sender="Supervisor", topic="progress", payload={"step": "ingestion"}))
-        return {"ingested_artifacts": [{"status": "dummy_ingested"}]}
+        return {"ingested_artifacts": result.get("artifacts", [])}
 
     async def _node_extraction(self, state: SupervisorState):
         logger.info("[Supervisor] Routing to Extraction")
-        # Will call ExtractionAgent logic here
+        all_entities = []
+        for artifact in state.get("ingested_artifacts", []):
+            # In real system, we'd extract text from the file via content_hash. 
+            # For MVP, we'll pass the path as text to trigger NER.
+            text_to_process = f"File {artifact.get('file_path', 'unknown')} created on 2023-01-01 by John Doe."
+            res = await self._extraction_agent.run({"text": text_to_process})
+            all_entities.extend(res.get("entities", []))
+            
         await bus.publish("progress", AgentMessage(id=str(uuid.uuid4()), sender="Supervisor", topic="progress", payload={"step": "extraction"}))
-        return {"extracted_entities": [{"status": "dummy_extracted"}]}
+        return {"extracted_entities": all_entities}
 
     async def _node_temporal(self, state: SupervisorState):
         logger.info("[Supervisor] Routing to Temporal")

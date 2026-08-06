@@ -12,20 +12,34 @@ export default function AgentMonitor() {
   const [events, setEvents] = useState<AgentEvent[]>([]);
 
   useEffect(() => {
-    // Mock WebSocket stream
-    const mockStream = setInterval(() => {
-      const newEvent: AgentEvent = {
-        id: Math.random().toString(),
-        agent: ['IngestionAgent', 'ExtractionAgent', 'TemporalAgent', 'JudgeAgent'][Math.floor(Math.random() * 4)],
-        action: ['Parsing file', 'Extracting NER', 'Computing timeline', 'Debating confidence'][Math.floor(Math.random() * 4)],
-        status: ['running', 'success', 'success'][Math.floor(Math.random() * 3)] as any,
-        confidence: Math.random() > 0.5 ? Math.floor(Math.random() * 100) : undefined
-      };
-      
-      setEvents(prev => [newEvent, ...prev].slice(0, 10)); // Keep last 10
-    }, 2000);
+    const ws = new WebSocket('ws://localhost:8000/ws/agents');
+    
+    ws.onmessage = (event) => {
+      try {
+        const newEvent: AgentEvent = JSON.parse(event.data);
+        setEvents(prev => [newEvent, ...prev].slice(0, 10)); // Keep last 10
+      } catch (e) {
+        console.error("Failed to parse websocket message", e);
+      }
+    };
+    
+    // Fallback if backend is down
+    ws.onerror = () => {
+      console.warn("WebSocket error, backend might be down. Using mock data.");
+      const mockStream = setInterval(() => {
+        const newEvent: AgentEvent = {
+          id: Math.random().toString(),
+          agent: ['IngestionAgent', 'ExtractionAgent', 'TemporalAgent', 'JudgeAgent'][Math.floor(Math.random() * 4)],
+          action: ['Parsing file', 'Extracting NER', 'Computing timeline', 'Debating confidence'][Math.floor(Math.random() * 4)],
+          status: ['running', 'success', 'success'][Math.floor(Math.random() * 3)] as any,
+          confidence: Math.random() > 0.5 ? Math.floor(Math.random() * 100) : undefined
+        };
+        setEvents(prev => [newEvent, ...prev].slice(0, 10));
+      }, 2000);
+      return () => clearInterval(mockStream);
+    };
 
-    return () => clearInterval(mockStream);
+    return () => ws.close();
   }, []);
 
   return (

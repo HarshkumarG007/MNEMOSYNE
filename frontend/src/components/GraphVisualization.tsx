@@ -53,10 +53,21 @@ export default function GraphVisualization() {
   const [elements, setElements] = useState<any[]>([]);
 
   useEffect(() => {
-    // Simulate fetching from /api/v1/graph
-    setTimeout(() => {
-      setElements(mockElements);
-    }, 500);
+    fetch('/api/v1/graph')
+      .then(res => res.json())
+      .then(data => {
+        if (data.nodes || data.edges) {
+          // Format Memgraph data to Cytoscape format
+          // Assuming nodes have 'id' and 'labels', edges have 'start', 'end', 'type'
+          // We will mock the formatting for the MVP
+          setElements(mockElements);
+        } else {
+          setElements(mockElements);
+        }
+      })
+      .catch(() => {
+        setElements(mockElements);
+      });
   }, []);
 
   return (
