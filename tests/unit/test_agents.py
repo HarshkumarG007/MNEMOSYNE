@@ -1,3 +1,5 @@
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from mnemosyne.agents.base import AgentMessage, BaseAgent
 from mnemosyne.agents.bus import MessageBus
@@ -64,7 +66,12 @@ async def test_message_bus_dlq() -> None:
 
 
 @pytest.mark.asyncio
-async def test_supervisor_workflow() -> None:
+@patch("mnemosyne.models.llm_router.LLMRouter.generate", new_callable=AsyncMock)
+@patch("mnemosyne.models.llm_router.LLMRouter.embed", new_callable=AsyncMock)
+async def test_supervisor_workflow(mock_embed, mock_generate) -> None:
+    mock_generate.return_value = '{"entities": [{"name": "Test", "type": "PERSON"}]}'
+    mock_embed.return_value = [0.0] * 1024
+
     supervisor = SupervisorAgent()
 
     # Run the workflow graph with dummy initial state
