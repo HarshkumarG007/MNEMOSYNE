@@ -65,6 +65,8 @@ target-version = "py311"
 select = ["E", "F", "B", "I"]
 
 [tool.mypy]
+mypy_path = "src"
+warn_unused_ignores = false
 strict = true
 python_version = "3.11"
 warn_return_any = true
