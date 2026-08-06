@@ -1,11 +1,12 @@
 from typing import Any
 
 import pytest
+import pytest_asyncio
 from mnemosyne.graph.memgraph_client import MemgraphClient
 
 
-@pytest.fixture
-def client() -> Any:
+@pytest_asyncio.fixture
+async def client() -> Any:
     client = MemgraphClient()
     try:
         await client.connect()

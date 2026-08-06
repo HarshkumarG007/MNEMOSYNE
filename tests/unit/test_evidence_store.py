@@ -2,12 +2,13 @@ import os
 from typing import Any
 
 import pytest
+import pytest_asyncio
 from cryptography.exceptions import InvalidTag
 from mnemosyne.evidence.store import EvidenceStore
 
 
-@pytest.fixture
-def evidence_store(tmp_path) -> Any:
+@pytest_asyncio.fixture
+async def evidence_store(tmp_path) -> Any:
     # Use a temporary directory for the database
     db_path = str(tmp_path / "test_evidence.sqlite")
 
