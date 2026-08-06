@@ -1,5 +1,7 @@
 from typing import List
+
 from .llm_router import router
+
 
 async def embed(texts: List[str]) -> List[List[float]]:
     """
