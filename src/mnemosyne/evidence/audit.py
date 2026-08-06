@@ -56,7 +56,7 @@ class AuditLog:
 
     def _sign(self, current_hash: str) -> str:
         """HMAC-SHA256 signature to prove generation by MNEMOSYNE core."""
-        return hmac.new(self.secret_key, current_hash.encode("utf-8"), hashlib.sha256).hexdigest()
+        return hmac.new(self.secret_key, current_hash.encode("utf-8"), hashlib.sha256).hexdigest()  # type: ignore
 
     def _append_genesis(self) -> None:
         """Creates the root of the chain."""

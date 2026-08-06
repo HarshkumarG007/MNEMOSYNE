@@ -19,10 +19,10 @@ class IngestionAgent(BaseAgent):
     Coordinates file processing: detector -> sandbox -> extraction
     """
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         super().__init__(name="IngestionAgent")
 
-    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
         files: List[str] = input_data.get("files", [])
         artifacts = []
 

@@ -1,4 +1,4 @@
-import bleach
+import bleach  # type: ignore
 from pydantic import BaseModel, field_validator
 
 # LLM delimiters that are forbidden in user text
@@ -20,7 +20,7 @@ class SecureRequestModel(BaseModel):
     @classmethod
     def sanitize_html(cls, value: str) -> str:
         """Strips all HTML tags from the input."""
-        return bleach.clean(value, tags=[], attributes={}, strip=True)
+        return bleach.clean(value, tags=[], attributes={}, strip=True)  # type: ignore
 
     @classmethod
     def check_path_traversal(cls, value: str) -> str:

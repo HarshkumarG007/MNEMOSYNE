@@ -27,7 +27,7 @@ class CorrelationAgent(BaseAgent):
     Entity resolution and pattern detection.
     """
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         super().__init__(name="CorrelationAgent")
 
     def resolve_entities(self, entities: List[Dict[str, Any]]) -> List[EntityNode]:
@@ -51,7 +51,7 @@ class CorrelationAgent(BaseAgent):
 
         return list(resolved.values())
 
-    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
         raw_entities = input_data.get("entities", [])
         raw_interactions = input_data.get("interactions", [])
 

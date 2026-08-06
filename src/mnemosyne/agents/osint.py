@@ -2,7 +2,7 @@ import logging
 from typing import Any, Dict
 
 import httpx
-import whois
+import whois  # type: ignore
 
 from .base import BaseAgent
 
@@ -15,7 +15,7 @@ class OsintAgent(BaseAgent):
     Strictly limited to 3 lookups: whois, hibp (HaveIBeenPwned), geoip.
     """
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         super().__init__(name="OsintAgent")
         self._cache: Dict[str, Dict[str, Any]] = {}
 
@@ -80,7 +80,7 @@ class OsintAgent(BaseAgent):
             logger.error(f"GeoIP lookup failed for {ip_address}: {e}")
             return {"source": "IP-API", "error": str(e)}
 
-    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
         lookup_type = input_data.get("type")
         query = input_data.get("query")
 

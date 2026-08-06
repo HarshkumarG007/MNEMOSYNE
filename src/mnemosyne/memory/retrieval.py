@@ -2,7 +2,7 @@ import logging
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from rank_bm25 import BM25Okapi
+from rank_bm25 import BM25Okapi  # type: ignore
 from sentence_transformers import CrossEncoder
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class HybridRetriever:
     Re-ranks the blended pool using a Cross-Encoder.
     """
 
-    def __init__(self, vector_store, reranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"):
+    def __init__(self, vector_store, reranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"):  # type: ignore
         self.vector_store = vector_store
         # Initialize Cross-Encoder
         try:

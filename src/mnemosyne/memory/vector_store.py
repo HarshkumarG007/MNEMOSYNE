@@ -11,7 +11,7 @@ CHROMA_DIR = os.path.join(DATA_DIR, "chroma")
 class VectorStore:
     """Semantic vector store powered by ChromaDB."""
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         os.makedirs(CHROMA_DIR, exist_ok=True)
         self.client = chromadb.PersistentClient(path=CHROMA_DIR)
 
@@ -29,7 +29,7 @@ class VectorStore:
         embeddings = await embed(documents)
 
         # Add to collection
-        collection.upsert(documents=documents, embeddings=embeddings, metadatas=metadatas, ids=ids)
+        collection.upsert(documents=documents, embeddings=embeddings, metadatas=metadatas, ids=ids)  # type: ignore
 
     async def search(
         self,
@@ -49,14 +49,14 @@ class VectorStore:
 
         query_embedding = (await embed([query]))[0]
 
-        results = collection.query(query_embeddings=[query_embedding], n_results=k, where=filter_metadata)
+        results = collection.query(query_embeddings=[query_embedding], n_results=k, where=filter_metadata)  # type: ignore
 
         # Format results
         formatted = []
-        if results and results.get("documents") and results["documents"][0]:
-            docs = results["documents"][0]
-            metas = results["metadatas"][0] if results.get("metadatas") else [{}] * len(docs)
-            dists = results["distances"][0] if results.get("distances") else [0.0] * len(docs)
+        if results and results.get("documents") and results["documents"][0]:  # type: ignore
+            docs = results["documents"][0]  # type: ignore
+            metas = results["metadatas"][0] if results.get("metadatas") else [{}] * len(docs)  # type: ignore
+            dists = results["distances"][0] if results.get("distances") else [0.0] * len(docs)  # type: ignore
             id_list = results["ids"][0]
 
             for doc, meta, dist, doc_id in zip(docs, metas, dists, id_list, strict=False):

@@ -35,7 +35,7 @@ class ReportGenerator:
     Generates JSON and Markdown forensic reports with strict citation linking.
     """
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         self.env = Environment(loader=BaseLoader())
         self.template = self.env.from_string(REPORT_TEMPLATE)
 

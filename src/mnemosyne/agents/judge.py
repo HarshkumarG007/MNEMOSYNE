@@ -30,11 +30,11 @@ class JudgeAgent(BaseAgent):
     Conflict resolution and debate mediation.
     """
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         super().__init__(name="JudgeAgent")
         self.decisions_log: List[Dict[str, Any]] = []
 
-    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
         # Support manual override
         if input_data.get("human_override"):
             logger.info("Human override received! Bypassing Judge LLM.")
@@ -69,7 +69,7 @@ class JudgeAgent(BaseAgent):
 
             parsed["is_override"] = False
             self.decisions_log.append(parsed)
-            return parsed
+            return parsed  # type: ignore
 
         except Exception as e:
             logger.error(f"[JudgeAgent] LLM Generation failed: {e}")

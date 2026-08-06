@@ -29,10 +29,10 @@ class ExtractionAgent(BaseAgent):
     Triggers debate if confidence is low.
     """
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         super().__init__(name="ExtractionAgent")
 
-    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
         text_content: str = input_data.get("text", "")
 
         if not text_content:

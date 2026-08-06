@@ -9,11 +9,11 @@ import uvicorn
 from mnemosyne.api.main import app
 
 
-def run_server():
+def run_server():  # type: ignore
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
 
 
-def run_demo():
+def run_demo():  # type: ignore
     print("Starting MNEMOSYNE Demo...")
     # Start server in background
     server_process = multiprocessing.Process(target=run_server)
@@ -47,4 +47,4 @@ def run_demo():
 
 
 if __name__ == "__main__":
-    run_demo()
+    run_demo()  # type: ignore

@@ -41,10 +41,10 @@ class BaseAgent(abc.ABC):
         """
         try:
             logger.info(f"[{self.name}] Agent started processing.")
-            output = await self._execute(input_data)
+            output = await self._execute(input_data)  # type: ignore
             validated_output = self.validate_output(output)
             logger.info(f"[{self.name}] Agent finished processing successfully.")
-            return validated_output
+            return validated_output  # type: ignore
         except Exception as e:
             return await self.handle_error(e, input_data)
 

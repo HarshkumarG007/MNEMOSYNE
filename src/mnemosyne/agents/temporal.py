@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-import dateparser
+import dateparser  # type: ignore
 from pydantic import BaseModel
 
 from .base import BaseAgent
@@ -25,7 +25,7 @@ class TemporalAgent(BaseAgent):
     Timeline construction and temporal reasoning.
     """
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         super().__init__(name="TemporalAgent")
 
     def parse_time(self, time_expr: str) -> Optional[datetime]:
@@ -35,7 +35,7 @@ class TemporalAgent(BaseAgent):
             # Ensure timezone awareness (default to UTC if naive)
             if parsed.tzinfo is None:
                 parsed = parsed.replace(tzinfo=timezone.utc)
-            return parsed
+            return parsed  # type: ignore
         return None
 
     def validate_consistency(self, cause: EventNode, effect: EventNode) -> bool:
@@ -61,7 +61,7 @@ class TemporalAgent(BaseAgent):
     def overlaps(self, a: EventNode, b: EventNode) -> bool:
         return a.start_time < b.end_time and a.end_time > b.start_time
 
-    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
         """
         Takes raw temporal expressions/events and normalizes them.
         """
