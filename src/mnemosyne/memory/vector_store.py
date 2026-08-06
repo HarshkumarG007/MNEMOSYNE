@@ -49,7 +49,7 @@ class VectorStore:
 
         query_embedding = (await embed([query]))[0]
 
-        results = collection.query(query_embeddings=[query_embedding], n_results=k, where=filter_metadata)  # type: ignore
+        results = collection.query(query_embeddings=[query_embedding], n_results=k, where=filter_metadata)
 
         # Format results
         formatted = []
