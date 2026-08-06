@@ -2,6 +2,7 @@ import os
 from typing import Any, Dict, List, Optional
 
 import chromadb
+
 from mnemosyne.models.embeddings import embed
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "data")
